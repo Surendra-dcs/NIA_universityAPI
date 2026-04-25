@@ -8,5 +8,9 @@ namespace NIAUNIVERSITYPANELAPI.Service
         List<ExamModel> GetExams();
         ExamModel GetExamById(int id);
         string DeleteExam(int id);
+
+        List<Rolllist> GetRolllist();
+
+        List<Resultlist> Getresultlist();
     }
 }
