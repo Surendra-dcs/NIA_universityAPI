@@ -21,6 +21,8 @@ builder.Services.AddScoped<IExamService, ExamService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<StudentAdmissionService>();
+builder.Services.AddScoped<StudentCorrectionService>();
+builder.Services.AddScoped<StudentEnrollmentService>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {

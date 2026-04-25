@@ -18,26 +18,4 @@ public class StudentAdmissionController : ControllerBase
         return Ok(data);
     }
 
-    [HttpGet("GetStudentByMobile")]
-    public IActionResult GetStudentByMobile(string mobile)
-    {
-        var data = _service.GetStudentByMobile(mobile);
-
-        if (data == null)
-            return NotFound("Student not found");
-
-        return Ok(data);
-    }
-
-    [HttpPost("UpdateStudent")]
-    public IActionResult UpdateStudent([FromBody] StudentAdmissionModel model)
-    {
-        var result = _service.UpdateStudent(model);
-
-        if (result)
-            return Ok("Updated successfully");
-
-        return BadRequest("Update failed");
-    }
-
 }
