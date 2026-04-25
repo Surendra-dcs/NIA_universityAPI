@@ -1,0 +1,52 @@
+name: Deploy NIA University API
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore Packages
+        run: dotnet restore
+
+      - name: Build Application
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Publish Application
+        run: dotnet publish -c Release -o ./publish
+
+      # Copy published files to server
+      - name: Upload files to Server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: root
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "publish/"
+          target: "/var/www/NIA_university/NIA_universityAPI/Deployment"
+
+      # Restart systemd service
+      - name: Restart Application Service
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: root
+          key: ${{ secrets.SERVER_SSH_KEY }}
+
+          script: |
+            sudo systemctl daemon-reload
+            sudo systemctl restart nia_university_api.service
+            sudo systemctl status nia_university_api.service --no-pager
