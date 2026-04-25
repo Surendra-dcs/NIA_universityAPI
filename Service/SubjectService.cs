@@ -26,12 +26,10 @@ namespace NIAUNIVERSITYPANELAPI.Service
                 cmd.Parameters.AddWithValue("@SubjectName", model.SubjectName);
                 cmd.Parameters.AddWithValue("@SubjectCode", model.SubjectCode);
                 cmd.Parameters.AddWithValue("@Status", model.Status);
-
                 con.Open();
-                cmd.ExecuteNonQuery();
+                var result = cmd.ExecuteScalar();
+                return result?.ToString() ?? "Operation Done";
             }
-
-            return "Saved Successfully";
         }
 
         public List<SubjectModel> GetSubjects()

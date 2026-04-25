@@ -16,15 +16,8 @@ public class ProgramController : ControllerBase
     {
         var data = _service.GetPrograms();
         return Ok(data);
-    }
-    
+    }    
    
-    [HttpGet("GetEaxmList")]
-    public IActionResult GetEaxmList()
-    {
-        var data = _service.GetExamList();
-        return Ok(data);
-    }
     [HttpPost("Add")]
     public IActionResult AddProgram([FromBody] ProModel model)
     {
