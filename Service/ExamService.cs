@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using NIAUNIVERSITYPANELAPI.Models;
 using System.Data;
 
@@ -88,6 +89,70 @@ namespace NIAUNIVERSITYPANELAPI.Service
                 cmd.ExecuteNonQuery();
             }
             return "Deleted Successfully";
+        }
+
+
+
+        public List<Rolllist> GetRolllist()
+        {
+            List<Rolllist> list = new List<Rolllist>();
+
+            using SqlConnection conn = new SqlConnection(_connectionString);
+
+            string query = "SELECT sem.RollNumber,sem.EnrollmentNumber,sem.SemesterId,sy.semyearname,sem.CourseId,cm.course_name,cm.Examname,sem.UserId,u.FullName,u.Email FROM tbl_StudentExamRollMaster sem INNER JOIN tbl_SemesterYear sy ON sem.SemesterId = sy.semId INNER JOIN tbl_CourseMaster cm ON sem.CourseId = cm.course_Id INNER JOIN Users u ON sem.UserId = u.id";
+
+            SqlCommand cmd = new SqlCommand(query, conn);
+
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                list.Add(new Rolllist
+                {
+                    UserId = Convert.ToInt32(reader["UserId"]),
+                    CourseName = reader["course_name"]?.ToString(),
+                    SemesterName = reader["semyearname"]?.ToString(),
+                    ExamName = reader["Examname"]?.ToString(),
+                    RollNumber = reader["RollNumber"]?.ToString(),
+                    UserName = reader["FullName"]?.ToString(),
+                    Email = reader["Email"]?.ToString(),
+                });
+            }
+
+            return list;
+        }
+
+        
+             public List<Resultlist> Getresultlist()
+        {
+            List<Resultlist> list = new List<Resultlist>();
+
+            using SqlConnection conn = new SqlConnection(_connectionString);
+
+            string query = "SELECT  erm.roll_number, erm.exam_id, em.exam_name,erm.attempt,  erm.result_status, erm.falil_in_paper, sem.UserId, u.FullName, u.Email FROM tbl_ExamResultMaster erm INNER JOIN tbl_StudentExamRollMaster sem ON erm.roll_number = sem.RollNumber INNER JOIN tbl_ExamMaster em  ON erm.exam_id = em.exam_id INNER JOIN Users u  ON sem.UserId = u.Id;";
+
+            SqlCommand cmd = new SqlCommand(query, conn);
+
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                list.Add(new Resultlist
+                {
+
+                    resultStatus = reader["result_status"]?.ToString(),
+                    attempt = reader["attempt"]?.ToString(),
+                    fallinpaper = reader["falil_in_paper"]?.ToString(),
+                    ExamName = reader["exam_name"]?.ToString(),
+                    RollNumber = reader["roll_number"]?.ToString(),
+                    UserName = reader["FullName"]?.ToString(),
+                    Email = reader["Email"]?.ToString(),
+                });
+            }
+
+            return list;
         }
     }
 }

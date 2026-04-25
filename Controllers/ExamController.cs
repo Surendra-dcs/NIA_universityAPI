@@ -34,5 +34,19 @@ namespace NIAUNIVERSITYPANELAPI.Controllers
         {
             return Ok(_service.DeleteExam(id));
         }
+
+        [HttpGet("rolllist")]
+        public IActionResult rolllist()
+        {
+            return Ok(_service.GetRolllist());
+        }
+
+        
+        [HttpGet("resultlist")]
+        public IActionResult resultlist()
+        {
+            return Ok(_service.Getresultlist());
+        }
+
     }
 }
