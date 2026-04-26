@@ -25,6 +25,12 @@ namespace NIAUNIVERSITYPANELAPI.Controllers
         {
             return Ok(_service.GetPrograms());
         }
+        [HttpGet("GetExamDetails")]
+        public IActionResult GetExamDetails()
+        {
+            return Ok(_service.GetExam());
+        }
+        
 
         [HttpPost("Add")]
         public IActionResult Add([FromBody] Course model)
