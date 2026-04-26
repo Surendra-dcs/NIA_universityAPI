@@ -23,6 +23,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<StudentAdmissionService>();
 builder.Services.AddScoped<StudentCorrectionService>();
 builder.Services.AddScoped<StudentEnrollmentService>();
+builder.Services.AddScoped<ExaminerService>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
