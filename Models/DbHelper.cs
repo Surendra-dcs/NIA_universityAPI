@@ -24,5 +24,25 @@ namespace NIAUNIVERSITYPANELAPI.Models
             da.Fill(dt);
             return dt;
         }
+
+        public async Task<DataTable> ExecuteDataAsync(string procName, SqlParameter[] parameters)
+        {
+            DataTable dt = new DataTable();
+
+            using (SqlConnection con = new SqlConnection(_connection))
+            using (SqlCommand cmd = new SqlCommand(procName, con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                if (parameters != null)
+                    cmd.Parameters.AddRange(parameters);
+
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                {
+                    await con.OpenAsync();
+                    da.Fill(dt);
+                }
+            }
+            return dt;
+        }
     }
 }

@@ -37,7 +37,7 @@ namespace NIAUNIVERSITYPANELAPI.Service
                         MotherName = dr["MotherName"].ToString(),
                         Email = dr["Email"].ToString(),
                         Mobile = dr["Mobile"].ToString(),
-                        IsVerify = Convert.ToBoolean(dr["IsVerify"])
+                        IsVerify = dr["IsVerify"] != DBNull.Value && Convert.ToBoolean(dr["IsVerify"])
                     });
                 }
             }
