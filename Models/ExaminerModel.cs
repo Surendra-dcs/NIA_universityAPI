@@ -40,4 +40,15 @@
         public int SubjectId { get; set; }
         public string PaperType { get; set; } = string.Empty;
     }
+
+    public class AssignedPaperModel
+    {
+        public int AssignId { get; set; }
+        public string ExaminerName { get; set; } = string.Empty;
+        public string CollegeName { get; set; } = string.Empty;
+        public string CourseName { get; set; } = string.Empty;
+        public string ExamName { get; set; } = string.Empty;
+        public string SubjectName { get; set; } = string.Empty;
+        public string PaperType { get; set; } = string.Empty;
+    }
 }

@@ -81,4 +81,10 @@ public class ExaminerController : ControllerBase
         return StatusCode(500, "Insert failed");
     }
 
+    [HttpGet("GetAllAssignedExaminer")]
+    public async Task<JsonResult> GetAllAssignedExaminer()
+    {
+        return new JsonResult(await _service.GetAllAssignedExaminer());
+    }
+
 }
