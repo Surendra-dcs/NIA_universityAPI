@@ -25,6 +25,11 @@ jobs:
       - name: Restore Packages
         run: dotnet restore
 
+      # 3.5 Replace CORS Origin for Production
+      - name: Replace CORS Origin
+        run: |
+          sed -i 's|https://localhost:7266|${{ secrets.CORS_ORIGIN }}|g' Program.cs
+
       # 4. Build
       - name: Build Application
         run: dotnet build --configuration Release --no-restore
