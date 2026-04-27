@@ -117,5 +117,15 @@ namespace NIAUNIVERSITYPANELAPI.Service
             return rows > 0;
         }
 
+        public async Task<List<AssignedPaperModel>> GetAllAssignedExaminer()
+        {
+            using SqlConnection con = new SqlConnection(_connectionString);
+
+            return (await con.QueryAsync<AssignedPaperModel>(
+                "sp_GetAssignedExaminerPaper",
+                commandType: CommandType.StoredProcedure
+            )).ToList();
+        }
+
     }
 }
