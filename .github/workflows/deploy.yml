@@ -4,49 +4,70 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-
+      # 1. Checkout
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # 2. Setup .NET
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
+      # 3. Restore
       - name: Restore Packages
         run: dotnet restore
 
+      # 4. Build
       - name: Build Application
         run: dotnet build --configuration Release --no-restore
 
+      # 5. Publish
       - name: Publish Application
         run: dotnet publish -c Release -o ./publish
 
-      # Copy published files to server
-      - name: Upload files to Server
+      # 6. Upload to TEMP folder (important)
+      - name: Upload to Server (TEMP)
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: root
           key: ${{ secrets.SERVER_SSH_KEY }}
-          source: "publish/"
-          target: "/var/www/NIA_university/NIA_universityAPI/Deployment"
+          source: "publish/*"
+          target: "/var/www/NIA_university_api_temp"
+          strip_components: 1
 
-      # Restart systemd service
-      - name: Restart Application Service
+      # 7. Deploy on server
+      - name: Deploy & Restart API
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: root
           key: ${{ secrets.SERVER_SSH_KEY }}
-
           script: |
-            sudo systemctl daemon-reload
-            sudo systemctl restart nia_university_api.service
-            sudo systemctl status nia_university_api.service --no-pager
+            echo "🧹 Cleaning old deployment"
+            mkdir -p /var/www/NIA_university/NIA_universityAPI/Deployment/publish
+            rm -rf /var/www/NIA_university/NIA_universityAPI/Deployment/publish/*
+
+            echo "🚀 Copy new build"
+            cp -r /var/www/NIA_university_api_temp/. /var/www/NIA_university/NIA_universityAPI/Deployment/publish/
+
+            echo "🧹 Remove temp"
+            rm -rf /var/www/NIA_university_api_temp
+
+            echo "🔐 Fix permissions"
+            chown -R www-data:www-data /var/www/NIA_university
+
+            echo "🔁 Restart service"
+            systemctl daemon-reload
+            systemctl restart nia_university_api.service
+
+            echo "✅ Status"
+            systemctl status nia_university_api.service --no-pager
