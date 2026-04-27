@@ -37,7 +37,26 @@ namespace NIAUNIVERSITYPANELAPI.Service
                         MotherName = dr["MotherName"].ToString(),
                         Email = dr["Email"].ToString(),
                         Mobile = dr["Mobile"].ToString(),
-                        IsVerify = dr["IsVerify"] != DBNull.Value && Convert.ToBoolean(dr["IsVerify"])
+                        IsVerify = dr["IsVerify"] != DBNull.Value && Convert.ToBoolean(dr["IsVerify"]),
+
+                        // ── Rich fields (were missing) ──
+                        FormNumber = dr["FormNumber"] != DBNull.Value ? dr["FormNumber"].ToString() : "",
+                        RollNumber = dr["RollNumber"] != DBNull.Value ? dr["RollNumber"].ToString() : "",
+                        AadhaarNumber = dr["AadhaarNumber"] != DBNull.Value ? dr["AadhaarNumber"].ToString() : "",
+                        AbcId = dr["AbcId"] != DBNull.Value ? dr["AbcId"].ToString() : "",
+                        Attempt = dr["Attempt"] != DBNull.Value ? dr["Attempt"].ToString() : "",
+                        StudentNameHindi = dr["StudentNameHindi"] != DBNull.Value ? dr["StudentNameHindi"].ToString() : "",
+                        FatherNameHindi = dr["FatherNameHindi"] != DBNull.Value ? dr["FatherNameHindi"].ToString() : "",
+                        MotherNameHindi = dr["MotherNameHindi"] != DBNull.Value ? dr["MotherNameHindi"].ToString() : "",
+                        Gender = dr["Gender"] != DBNull.Value ? dr["Gender"].ToString() : "",
+                        DateOfBirth = dr["DateOfBirth"] != DBNull.Value ? dr["DateOfBirth"].ToString() : "",
+                        Category = dr["Category"] != DBNull.Value ? dr["Category"].ToString() : "",
+                        PwdCategory = dr["PwdCategory"] != DBNull.Value ? dr["PwdCategory"].ToString() : "",
+                        Religion = dr["Religion"] != DBNull.Value ? dr["Religion"].ToString() : "",
+                        State = dr["State"] != DBNull.Value ? dr["State"].ToString() : "",
+                        District = dr["District"] != DBNull.Value ? dr["District"].ToString() : "",
+                        CandidateImagePath = dr["CandidateImagePath"] != DBNull.Value ? dr["CandidateImagePath"].ToString() : "",
+                        SignatureImagePath = dr["SignatureImagePath"] != DBNull.Value ? dr["SignatureImagePath"].ToString() : "",
                     });
                 }
             }
