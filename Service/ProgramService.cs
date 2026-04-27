@@ -34,9 +34,27 @@ namespace NIAUNIVERSITYPANELAPI.Service
             }
             return list;
         }
-       
-       
-
+        public List<ExamModel> GetExam()
+        {
+            List<ExamModel> list = new List<ExamModel>();
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("sp_GetExamListDetails", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                con.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    list.Add(new ExamModel
+                    {
+                        ExamId = Convert.ToInt32(dr["exam_id"]),
+                        ExamName = dr["exam_name"].ToString()!,
+                    });
+                }
+            }
+            return list;
+        }
+        
         public void AddProgram(ProModel model)
         {
             using (SqlConnection con = new SqlConnection(_connectionString))

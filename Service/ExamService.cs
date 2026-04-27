@@ -154,5 +154,61 @@ namespace NIAUNIVERSITYPANELAPI.Service
 
             return list;
         }
+
+        public List<TabulationRegisterModel> GetTabulationRegister(int? examId = null, string? rollNo = null)
+        {
+            List<TabulationRegisterModel> list = new List<TabulationRegisterModel>();
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("sp_GetExamResult", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // ExamId parameter
+                    cmd.Parameters.AddWithValue(
+                        "@ExamId",
+                        examId.HasValue ? examId.Value : DBNull.Value
+                    );
+
+                    // RollNo parameter
+                    cmd.Parameters.AddWithValue(
+                        "@rollNo",
+                        !string.IsNullOrWhiteSpace(rollNo) ? rollNo : DBNull.Value
+                    );
+
+                    con.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            list.Add(new TabulationRegisterModel
+                            {
+                                exam_name = dr["exam_name"].ToString(),
+                                RollNumber = dr["RollNumber"].ToString(),
+                                enrollmentNo = dr["EnrollmentNumber"].ToString(),
+                                StudentName = dr["StudentName"].ToString(),
+                                FatherName = dr["FatherName"].ToString(),
+                                subject_name = dr["subject_name"].ToString(),
+                                semyearcode = dr["semyearcode"].ToString(),
+                                scriptId = dr["scriptId"].ToString(),
+                                maxValue = Convert.ToInt32(dr["maxValue"]),
+                                minValue = Convert.ToInt32(dr["minValue"]),
+                                Theory = Convert.ToInt32(dr["Theory"]),
+                                Practical = dr["Practical"].ToString(),
+                                Grace = dr["Grace"] == DBNull.Value ? "" : dr["Grace"].ToString(),
+                                Requiredtoappear = dr["Requiredtoappear"] == DBNull.Value ? "" : dr["Requiredtoappear"].ToString(),
+                                Distinction = dr["Distinction"].ToString(),
+                                GrandTotal = Convert.ToInt32(dr["GrandTotal"]),
+                                Result = dr["Result"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+
+            return list;
+        }
     }
 }

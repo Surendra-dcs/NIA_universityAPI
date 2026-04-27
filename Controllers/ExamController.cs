@@ -48,5 +48,11 @@ namespace NIAUNIVERSITYPANELAPI.Controllers
             return Ok(_service.Getresultlist());
         }
 
+        [HttpGet][Route("resultsheet")] 
+        public IActionResult GetResultList(int? examId = null, string? rollNo = null) 
+        { 
+            var data = _service.GetTabulationRegister(examId, rollNo);
+            return Ok(data); 
+        }
     }
 }

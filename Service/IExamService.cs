@@ -10,7 +10,7 @@ namespace NIAUNIVERSITYPANELAPI.Service
         string DeleteExam(int id);
 
         List<Rolllist> GetRolllist();
-
+        List<TabulationRegisterModel> GetTabulationRegister(int? examId = null, string? rollNo = null);
         List<Resultlist> Getresultlist();
     }
 }
