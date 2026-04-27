@@ -29,7 +29,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("https://localhost:7266") 
+        policy.WithOrigins("https://localhost:7266","https://nia.universitymaster.dcstechnosis.com") 
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
