@@ -99,7 +99,40 @@ namespace NIAUNIVERSITYPANELAPI.Service
 
             using SqlConnection conn = new SqlConnection(_connectionString);
 
-            string query = "SELECT sem.RollNumber,sem.EnrollmentNumber,sem.SemesterId,sy.semyearname,sem.CourseId,cm.course_name,cm.Examname,sem.UserId,u.FullName,u.Email FROM tbl_StudentExamRollMaster sem INNER JOIN tbl_SemesterYear sy ON sem.SemesterId = sy.semId INNER JOIN tbl_CourseMaster cm ON sem.CourseId = cm.course_Id INNER JOIN Users u ON sem.UserId = u.id";
+            string query = @"
+                SELECT
+                    sem.RollNumber,
+                    sem.EnrollmentNumber,
+                    sem.SemesterId,
+                    sy.semyearname,
+                    sem.CourseId,
+                    cm.course_name,
+                    cm.Examname,
+                    sem.UserId,
+                    u.FullName,
+                    u.Email,
+                    ISNULL(inf.Gender, '') AS Gender,
+                    MAX(CASE WHEN dd.FileType = 'Photo'     THEN dd.FilePath END) AS CandidateImagePath,
+                    MAX(CASE WHEN dd.FileType = 'Signature' THEN dd.FilePath END) AS SignatureImagePath
+                FROM tbl_StudentExamRollMaster sem
+                INNER JOIN tbl_SemesterYear sy             ON sem.SemesterId   = sy.semId
+                INNER JOIN tbl_CourseMaster cm             ON sem.CourseId     = cm.course_Id
+                INNER JOIN Users u                         ON sem.UserId       = u.id
+                LEFT  JOIN FormApplications fa             ON fa.UserId        = u.id
+                LEFT  JOIN UploadedDocuments dd            ON dd.ApplicationId = fa.Id
+                LEFT  JOIN tbl_StudentExamInfoMaster inf   ON inf.UserId       = u.id
+                GROUP BY
+                    sem.RollNumber,
+                    sem.EnrollmentNumber,
+                    sem.SemesterId,
+                    sy.semyearname,
+                    sem.CourseId,
+                    cm.course_name,
+                    cm.Examname,
+                    sem.UserId,
+                    u.FullName,
+                    u.Email,
+                    inf.Gender";
 
             SqlCommand cmd = new SqlCommand(query, conn);
 
@@ -115,16 +148,20 @@ namespace NIAUNIVERSITYPANELAPI.Service
                     SemesterName = reader["semyearname"]?.ToString(),
                     ExamName = reader["Examname"]?.ToString(),
                     RollNumber = reader["RollNumber"]?.ToString(),
+                    EnrollmentNumber = reader["EnrollmentNumber"]?.ToString(),
                     UserName = reader["FullName"]?.ToString(),
                     Email = reader["Email"]?.ToString(),
+                    Gender = reader["Gender"]?.ToString() ?? "",
+                    CandidateImagePath = reader["CandidateImagePath"] == DBNull.Value ? "" : reader["CandidateImagePath"].ToString(),
+                    SignatureImagePath = reader["SignatureImagePath"] == DBNull.Value ? "" : reader["SignatureImagePath"].ToString(),
                 });
             }
 
             return list;
         }
 
-        
-             public List<Resultlist> Getresultlist()
+
+        public List<Resultlist> Getresultlist()
         {
             List<Resultlist> list = new List<Resultlist>();
 

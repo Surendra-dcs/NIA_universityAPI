@@ -34,5 +34,6 @@
         public string District { get; set; } = string.Empty;
         public string CandidateImagePath { get; set; } = string.Empty;
         public string SignatureImagePath { get; set; } = string.Empty;
+        public string FileType { get; set; } = string.Empty;
     }
 }
