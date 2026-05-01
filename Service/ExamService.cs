@@ -132,7 +132,8 @@ namespace NIAUNIVERSITYPANELAPI.Service
                     sem.UserId,
                     u.FullName,
                     u.Email,
-                    inf.Gender";
+                    inf.Gender
+                ORDER BY sem.RollNumber DESC";
 
             SqlCommand cmd = new SqlCommand(query, conn);
 
