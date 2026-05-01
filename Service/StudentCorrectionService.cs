@@ -29,6 +29,20 @@ namespace NIAUNIVERSITYPANELAPI.Service
                 {
                     if (dr.Read())
                     {
+                        // ── Helper: safely read a column that may not exist in older SP versions ──
+                        string SafeRead(string col)
+                        {
+                            try
+                            {
+                                int ord = dr.GetOrdinal(col);
+                                return dr.IsDBNull(ord) ? "" : dr.GetString(ord);
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
+                                return "";
+                            }
+                        }
+
                         student = new StudentCorrectionModel
                         {
                             Id = dr["Id"] != DBNull.Value ? Convert.ToInt32(dr["Id"]) : 0,
@@ -38,10 +52,14 @@ namespace NIAUNIVERSITYPANELAPI.Service
                             MotherName = dr["MotherName"]?.ToString(),
                             AlternateMobile = dr["AlternateMobile"]?.ToString(),
                             DateOfBirth = dr["DateOfBirth"] != DBNull.Value
-                                            ? Convert.ToDateTime(dr["DateOfBirth"])
-                                            : (DateTime?)null,
+                                                ? Convert.ToDateTime(dr["DateOfBirth"])
+                                                : (DateTime?)null,
                             Address = dr["AddressLine1"]?.ToString(),
-                            MainMobile = dr["mainMobile"]?.ToString()
+                            MainMobile = dr["mainMobile"]?.ToString(),
+
+                            // ── S3 image paths ────────────────────────────────────────────────
+                            CandidateImagePath = SafeRead("CandidateImagePath"),
+                            SignatureImagePath = SafeRead("SignatureImagePath"),
                         };
                     }
                 }
@@ -89,5 +107,4 @@ namespace NIAUNIVERSITYPANELAPI.Service
             }
         }
     }
-           
 }
