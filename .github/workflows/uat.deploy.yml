@@ -58,17 +58,17 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             echo "🧹 Cleaning old deployment"
-            mkdir -p /var/www/uat_NIA_University/NIA_universityAPI/Deployment/publish
-            rm -rf /var/www/uat_NIA_University/NIA_universityAPI/Deployment/publish/*
+            mkdir -p /var/www/UAT_NIA_university/NIA_universityAPI/Deployment/publish
+            rm -rf /var/www/UAT_NIA_university/NIA_universityAPI/Deployment/publish/*
 
             echo "🚀 Copy new build"
-            cp -r /var/www/UAT_NIA_university_api_temp/. /var/www/uat_NIA_University/NIA_universityAPI/Deployment/publish/
+            cp -r /var/www/UAT_NIA_university_api_temp/. /var/www/UAT_NIA_university/NIA_universityAPI/Deployment/publish/
 
             echo "🧹 Remove temp"
             rm -rf /var/www/UAT_NIA_university_api_temp
 
             echo "🔐 Fix permissions"
-            chown -R www-data:www-data /var/www/uat_NIA_University
+            chown -R www-data:www-data /var/www/UAT_NIA_university
 
             echo "🔁 Restart service"
             systemctl daemon-reload
