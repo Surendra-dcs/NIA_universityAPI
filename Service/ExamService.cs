@@ -248,5 +248,61 @@ namespace NIAUNIVERSITYPANELAPI.Service
 
             return list;
         }
+
+        public List<ReEvaluationModel> GetReEvaluationList()
+        {
+            List<ReEvaluationModel> list = new List<ReEvaluationModel>();
+
+            using SqlConnection con = new SqlConnection(_connectionString);
+
+            string query = @"
+        SELECT
+            r.Id,
+            r.UserId,
+            r.RollNumber,
+            r.CourseId,
+            r.SemesterId,
+            r.SubjectId,
+            r.SubjectName,
+            r.Reason,
+            r.Status,
+            CONVERT(VARCHAR, r.CreatedAt, 103) AS CreatedAt,
+            CONVERT(VARCHAR, r.UpdatedAt, 103) AS UpdatedAt,
+            u.FullName       AS StudentName,
+            cm.course_name   AS CourseName,
+            sy.semyearname   AS SemesterName
+        FROM tbl_ReEvaluationMaster r
+        LEFT JOIN Users u                ON r.UserId     = u.Id
+        LEFT JOIN tbl_CourseMaster cm    ON r.CourseId   = cm.course_Id
+        LEFT JOIN tbl_SemesterYear sy    ON r.SemesterId = sy.semId
+        ORDER BY r.CreatedAt DESC";
+
+            SqlCommand cmd = new SqlCommand(query, con);
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                list.Add(new ReEvaluationModel
+                {
+                    Id = Convert.ToInt32(dr["Id"]),
+                    UserId = Convert.ToInt32(dr["UserId"]),
+                    RollNumber = dr["RollNumber"]?.ToString() ?? "",
+                    CourseId = Convert.ToInt32(dr["CourseId"]),
+                    SemesterId = Convert.ToInt32(dr["SemesterId"]),
+                    SubjectId = Convert.ToInt32(dr["SubjectId"]),
+                    SubjectName = dr["SubjectName"]?.ToString() ?? "",
+                    Reason = dr["Reason"]?.ToString() ?? "",
+                    Status = dr["Status"]?.ToString() ?? "",
+                    CreatedAt = dr["CreatedAt"]?.ToString() ?? "",
+                    UpdatedAt = dr["UpdatedAt"]?.ToString() ?? "",
+                    StudentName = dr["StudentName"]?.ToString() ?? "",
+                    CourseName = dr["CourseName"]?.ToString() ?? "",
+                    SemesterName = dr["SemesterName"]?.ToString() ?? "",
+                });
+            }
+
+            return list;
+        }
     }
 }
