@@ -25,6 +25,7 @@ builder.Services.AddScoped<StudentCorrectionService>();
 builder.Services.AddScoped<StudentEnrollmentService>();
 builder.Services.AddScoped<ExaminerService>();
 builder.Services.AddScoped<RemunerationService>();
+builder.Services.AddScoped<MobileChangeRequestService>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
